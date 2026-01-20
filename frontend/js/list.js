@@ -295,7 +295,7 @@ async function fetchEmployeesName() {
       success: function (response) {
         const employees = response.data;
         const $select = $("#employeeDropdown");
-        $select.empty().append('<option value="">Filter by Employee</option>');
+        $select.empty().append('<option value="">All Employees</option>');
 
         employees.forEach((e) => {
           $select.append(`<option value="${e._id}">${e.e_name}</option>`);

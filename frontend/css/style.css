@@ -350,3 +350,186 @@ label.error {
     padding: 8px 15px;
     margin-left: 10px;
 }
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .split-container {
+        flex-direction: column;
+    }
+
+    .form-section,
+    .list-section {
+        width: 100%;
+        position: static;
+        /* Unstick on mobile */
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .topbar nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .topbar .action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .filter-col-grow,
+    .filter-col-auto {
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+    }
+
+    .date-inputs {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Make date selects share width equally */
+    .month-input,
+    .year-input {
+        flex: 1;
+        width: auto;
+    }
+
+    .filter-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .filter-actions button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .dt-layout-cell {
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* Table Responsiveness */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.table-responsive table {
+    margin-bottom: 0 !important;
+    border-bottom: none !important;
+}
+
+/* Ensure dataTables don't force width that causes overflow */
+.dataTables_wrapper {
+    width: 100%;
+    overflow: hidden;
+    /* Clear floats */
+}
+
+
+/* DataTables Control Layout Fixes */
+.dt-layout-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    /* Allow wrapping on very small screens */
+    gap: 10px;
+    padding: 0px 14px;
+}
+
+.dt-layout-row select,
+input {
+    font-family: 'Inter', sans-serif;
+}
+
+.dt-layout-cell {
+    display: flex;
+    align-items: center;
+}
+
+.dt-layout-end {
+    justify-content: flex-end;
+    margin-left: auto;
+    /* Push to right */
+}
+
+/* Length Selector Styling */
+.dt-length {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dt-length select {
+    width: auto;
+    padding: 6px 10px;
+    display: inline-block;
+}
+
+.dt-length label {
+    margin-bottom: 0;
+    font-weight: normal;
+    white-space: nowrap;
+    display: none;
+}
+
+/* Search Box Styling */
+.dt-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dt-search label {
+    margin-bottom: 0;
+}
+
+.dt-search input {
+    width: auto;
+    display: inline-block;
+}
+
+/* Mobile adjustments for DataTables controls */
+@media screen and (max-width: 576px) {
+    .dt-layout-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dt-layout-end {
+        margin-left: 0;
+        justify-content: flex-start;
+    }
+
+    .dt-search {
+        width: 100%;
+    }
+
+    .dt-search input {
+        flex: 1;
+    }
+}
