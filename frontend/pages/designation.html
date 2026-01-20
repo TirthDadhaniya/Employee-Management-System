@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Designations</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h2>Manage Designations</h2>
+      <nav>
+        <a href="list.html" class="btn btn-secondary">Back to Dashboard</a>
+      </nav>
+    </header>
+
+    <div class="split-container">
+      <!-- Add Designation Form -->
+      <section class="form-section">
+        <h3 class="section-header">Add New Designation</h3>
+        <form id="designationForm">
+          <div class="form-group">
+            <label for="name">Designation Name</label>
+            <input type="text" id="name" name="name" placeholder="e.g. Software Engineer" required />
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-primary flex-1">Add Designation</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Designation List -->
+      <section class="list-section">
+        <h3 class="section-header">Current Designations</h3>
+        <table id="designationTable" class="display w-100">
+          <thead>
+            <tr>
+              <th>Designation</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="designationTableBody"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="../js/designation.js"></script>
+  </body>
+</html>

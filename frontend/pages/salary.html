@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Salaries</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h2>Manage Salaries</h2>
+      <nav>
+        <a href="list.html" class="btn btn-secondary">Back to Dashboard</a>
+      </nav>
+    </header>
+
+    <div class="split-container">
+      <!-- Salary Form -->
+      <div class="form-section">
+        <h3 class="section-header">Add / Edit Salary</h3>
+        <form id="salaryForm">
+          <input type="hidden" id="salary_id" />
+
+          <div class="form-group">
+            <label>Employee</label>
+            <select name="e_id" id="employeeDropdown" required>
+              <option value="">Select Employee</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Year</label>
+            <select name="year" id="yearDropdown" required>
+              <option value="">Select Year</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Month</label>
+            <select name="month" id="monthDropdown" required>
+              <option value="">Select Month</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Salary Amount</label>
+            <input type="number" name="salary" placeholder="0.00" required min="0" />
+          </div>
+
+          <div class="action-buttons">
+            <button type="submit" class="btn btn-primary flex-1">Save Entry</button>
+            <button type="button" id="resetBtn" class="btn btn-secondary hidden">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Salary List -->
+      <div class="list-section">
+        <h3 class="section-header">Salary Revenue History</h3>
+        <table id="salaryTable" class="display w-100">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Month</th>
+              <th>Year</th>
+              <th>Amount</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="salaryTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="../js/salary.js"></script>
+  </body>
+</html>
