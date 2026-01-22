@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
-const URL = "mongodb://127.0.0.1:27017/employeeDB";
+const URL = process.env.MONGO_URL;
 
 const connectDB = async () => {
   try {
-    mongoose.connect(URL);
+    if (!URL) {
+      throw new Error("MONGO_URL is not defined in environment variables");
+    }
+    await mongoose.connect(URL);
     console.log(`Database connected \n${URL}`);
   } catch (err) {
     console.log(`Error: ${err.message}`);
