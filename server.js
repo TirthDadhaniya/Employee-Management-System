@@ -7,6 +7,7 @@ const connectDB = require("./backend/db");
 const employeeRoutes = require("./backend/routes/employee.routes");
 const salaryEntryRoutes = require("./backend/routes/salaryEntry.routes");
 const designationRoutes = require("./backend/routes/designation.routes");
+const authRoutes = require("./backend/routes/auth.routes");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 app.use("/employees", employeeRoutes);
 app.use("/salary-entries", salaryEntryRoutes);
 app.use("/designations", designationRoutes);
+app.use("/auth", authRoutes);
 
 connectDB();
 
