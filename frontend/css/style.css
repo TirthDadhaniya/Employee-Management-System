@@ -235,14 +235,6 @@ table.dataTable.no-footer {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Error Messages (jQuery Validation) */
-label.error {
-    color: var(--danger-color);
-    font-size: 0.85rem;
-    margin-top: 4px;
-    display: block;
-}
-
 /* Utility */
 .hidden {
     display: none;
@@ -601,4 +593,12 @@ input {
     margin-top: 0.5rem;
     padding: 12px;
     font-size: 1rem;
+}
+
+/* Error Messages (jQuery Validation) */
+label.error {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: block;
 }
