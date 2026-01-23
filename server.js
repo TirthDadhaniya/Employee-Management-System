@@ -8,6 +8,7 @@ const employeeRoutes = require("./backend/routes/employee.routes");
 const salaryEntryRoutes = require("./backend/routes/salaryEntry.routes");
 const designationRoutes = require("./backend/routes/designation.routes");
 const authRoutes = require("./backend/routes/auth.routes");
+const errMiddleware = require("./backend/middleware/error.middleware");
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.use("/designations", designationRoutes);
 app.use("/auth", authRoutes);
 
 connectDB();
+
+app.use(errMiddleware);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
