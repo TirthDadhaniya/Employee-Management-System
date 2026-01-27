@@ -17,10 +17,6 @@
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-* {
-  box-sizing: border-box;
-}
-
 /* Utility Classes */
 .flex-1 {
   flex: 1;
