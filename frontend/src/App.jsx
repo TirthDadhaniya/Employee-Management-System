@@ -1,12 +1,12 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Employee from "./pages/Employee.jsx";
-import Designation from "./pages/Designation.jsx";
-import List from "./pages/List.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Resigter.jsx";
-import Salary from "./pages/Salary.jsx";
-import Navbar from "./components/Navbar.jsx";
+import Employee from "./pages/Employee/Employee.jsx";
+import Designation from "./pages/Designation/Designation.jsx";
+import List from "./pages/List/List.jsx";
+import Login from "./pages/Login/Login.jsx";
+import Register from "./pages/Register/Register.jsx";
+import Salary from "./pages/Salary/Salary.jsx";
+import Navbar from "./components/Navbar/Navbar.jsx";
 
 function App() {
   return (
