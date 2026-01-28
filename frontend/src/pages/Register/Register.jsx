@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "./Register.css";
+import { Link } from "react-router-dom";
 
 function Register() {
   const [registerData, setRegisterData] = useState({
@@ -15,22 +17,36 @@ function Register() {
     });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(employee);
+    try {
+      const res = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registerData),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Registered:", data);
+        setRegisterData({ fullName: "", email: "", password: "" }); // Clear form
+        // navigate(0); // Refresh the page to show updated list
+      }
+    } catch (error) {
+      console.error("Error registering:", error);
+    }
   };
 
   return (
     <>
-      <div class="auth-wrapper">
-        <div class="auth-card">
-          <div class="auth-header">
+      <div className="auth-wrapper">
+        <div className="auth-card">
+          <div className="auth-header">
             <h2>Create Account</h2>
             <p>Register to get started</p>
           </div>
-          <form id="registerForm" class="auth-form" onSubmit={onSubmit}>
-            <div class="form-group">
-              <label for="fullName">Full Name</label>
+          <form id="registerForm" className="auth-form" onSubmit={onSubmit}>
+            <div className="form-group">
+              <label htmlFor="fullName">Full Name</label>
               <input
                 type="text"
                 id="fullName"
@@ -39,11 +55,11 @@ function Register() {
                 value={registerData.fullName}
                 onChange={handleInput}
                 required
-                class="form-control"
+                className="form-control"
               />
             </div>
-            <div class="form-group">
-              <label for="email">Email Address</label>
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -52,11 +68,11 @@ function Register() {
                 value={registerData.email}
                 onChange={handleInput}
                 required
-                class="form-control"
+                className="form-control"
               />
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="password"
@@ -65,16 +81,16 @@ function Register() {
                 value={registerData.password}
                 onChange={handleInput}
                 required
-                class="form-control"
+                className="form-control"
               />
             </div>
-            <button type="submit" class="btn btn-primary btn-block">
+            <button type="submit" className="btn btn-primary btn-block">
               Sign Up
             </button>
           </form>
-          <div class="auth-footer">
+          <div className="auth-footer">
             <p>
-              Already have an account? <a href="login.html">Sign In</a>
+              Already have an account? <Link to="/login">Sign In</Link>
             </p>
           </div>
         </div>
