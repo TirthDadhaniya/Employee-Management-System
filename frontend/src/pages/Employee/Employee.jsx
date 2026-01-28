@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Employee.css";
+import Navbar from "../../components/Navbar/Navbar";
 
 function Employee() {
   const [employee, setEmployee] = useState({
@@ -21,13 +22,58 @@ function Employee() {
     });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(employee);
+
+    // Determine if we are Adding or Editing
+    const isEditing = employee.db_id && employee.db_id !== "";
+
+    // 2. Set the URL and Method accordingly
+    // If editing, we add the ID to the URL (e.g., /api/employees/123)
+    const url = isEditing ? `http://localhost:3000/employees/${employee.db_id}` : `http://localhost:3000/employees`;
+
+    const method = isEditing ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(employee), // Send the whole state object
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(isEditing ? "Employee Updated!" : "Employee Added!");
+
+        // 3. Reset form after successful save
+        setEmployee({
+          db_id: "",
+          e_name: "",
+          e_mail: "",
+          e_phone: "",
+          employee_gender: "",
+          e_designation: "",
+          e_joining: "",
+          e_initialsalary: "",
+        });
+
+        // Optional: If you have a list function, call it here to refresh the table
+        // fetchEmployees();
+      } else {
+        alert("Error: " + result.error);
+      }
+    } catch (err) {
+      console.error("Connection failed:", err);
+      alert("Server is down or unreachable.");
+    }
   };
 
   return (
     <>
+      <Navbar />
       <div className="split-container">
         {/* Form Section */}
         <div className="form-section">
