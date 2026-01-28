@@ -1,13 +1,23 @@
 import { Link } from "react-router-dom";
-import "./Navbar.css";
+import "./Header.css";
 
-function Navbar() {
+function Header() {
   return (
     <>
       <header className="topbar">
         <h2>Employee System</h2>
         <nav className="action-buttons">
           <ul>
+            <li>
+              <Link to="/login" className="btn btn-primary">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link to="/list" className="btn btn-primary">
+                List
+              </Link>
+            </li>
             <li>
               <Link to="/employee" className="btn btn-primary">
                 Manage Employees
@@ -30,4 +40,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Header;
