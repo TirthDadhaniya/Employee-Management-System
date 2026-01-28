@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "./Login.css";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -14,22 +16,36 @@ function Login() {
     });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(loginData);
+    try {
+      const res = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Logged in:", data);
+        setLoginData({ email: "", password: "" }); // Clear form
+        // navigate(0); // Refresh the page to show updated list
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
 
   return (
     <>
-      <div class="auth-wrapper">
-        <div class="auth-card">
-          <div class="auth-header">
+      <div className="auth-wrapper">
+        <div className="auth-card">
+          <div className="auth-header">
             <h2>Welcome Back</h2>
             <p>Please login to your account</p>
           </div>
-          <form id="loginForm" class="auth-form" onSubmit={onSubmit}>
-            <div class="form-group">
-              <label for="email">Email Address</label>
+          <form id="loginForm" className="auth-form" onSubmit={onSubmit}>
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -38,11 +54,11 @@ function Login() {
                 required
                 value={loginData.email}
                 onChange={handleInput}
-                class="form-control"
+                className="form-control"
               />
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="password"
@@ -51,16 +67,16 @@ function Login() {
                 value={loginData.password}
                 onChange={handleInput}
                 required
-                class="form-control"
+                className="form-control"
               />
             </div>
-            <button type="submit" class="btn btn-primary btn-block">
+            <button type="submit" className="btn btn-primary btn-block">
               Sign In
             </button>
           </form>
-          <div class="auth-footer">
+          <div className="auth-footer">
             <p>
-              Don't have an account? <a href="register.html">Create Account</a>
+              Don't have an account? <Link to="/register">Create Account</Link>
             </p>
           </div>
         </div>
