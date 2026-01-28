@@ -1,8 +1,24 @@
 import { useState } from "react";
 import "./Salary.css";
-import Navbar from "../../components/Navbar/Navbar";
+import Header from "../../components/Header/Header";
+import { useEffect } from "react";
 
 function Salary() {
+  const [employees, setEmployees] = useState([]);
+
+  useEffect(() => {
+    const getEmployees = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/employees/dropdown");
+        const data = await res.json();
+        setEmployees(data.data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+    getEmployees();
+  }, []);
+
   const [salary, setSalary] = useState({
     salary_id: "",
     e_id: "",
@@ -68,31 +84,36 @@ function Salary() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="split-container">
         {/* <!-- Salary Form --> */}
         <div className="form-section">
           <h3 className="section-header">Add / Edit Salary</h3>
-          <form id="salaryForm">
+          <form id="salaryForm" onSubmit={onSubmit}>
             <input type="hidden" name="salary_id" id="salary_id" />
 
             <div className="form-group">
               <label>Employee</label>
-              <select name="e_id" id="employeeDropdown" required>
+              <select name="e_id" id="employeeDropdown" onChange={handleInput} value={salary.e_id} required>
                 <option value="">Select Employee</option>
+                {employees.map((e) => (
+                  <option key={e._id} value={e._id}>
+                    {e.e_name}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="form-group">
               <label>Year</label>
-              <select name="year" id="yearDropdown" required>
+              <select name="year" id="yearDropdown" required onChange={handleInput} value={salary.year}>
                 <option value="">Select Year</option>
               </select>
             </div>
 
             <div className="form-group">
               <label>Month</label>
-              <select name="month" id="monthDropdown" required>
+              <select name="month" id="monthDropdown" required onChange={handleInput} value={salary.month}>
                 <option value="">Select Month</option>
                 <option value="1">January</option>
                 <option value="2">February</option>
@@ -111,7 +132,15 @@ function Salary() {
 
             <div className="form-group">
               <label>Salary Amount</label>
-              <input type="number" name="salary" placeholder="0.00" required min="0" />
+              <input
+                type="number"
+                name="salary"
+                placeholder="0.00"
+                required
+                min="0"
+                onChange={handleInput}
+                value={salary.salary}
+              />
             </div>
 
             <div className="action-buttons">

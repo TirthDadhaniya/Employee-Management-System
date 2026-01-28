@@ -1,8 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Employee.css";
-import Navbar from "../../components/Navbar/Navbar";
+import Header from "../../components/Header/Header";
 
 function Employee() {
+  const [designations, setDesignations] = useState([]); // For Employee Form
+
+  useEffect(() => {
+    async function fetchDesignations() {
+      try {
+        const res = await fetch("http://localhost:3000/employees/designations");
+        const data = await res.json();
+        setDesignations(data.data);
+      } catch (error) {
+        console.error("Error fetching designations:", error);
+      }
+    }
+    fetchDesignations();
+  }, []);
+
   const [employee, setEmployee] = useState({
     db_id: "", // Hidden field
     e_name: "",
@@ -73,7 +88,7 @@ function Employee() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="split-container">
         {/* Form Section */}
         <div className="form-section">

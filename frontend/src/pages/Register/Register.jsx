@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const [registerData, setRegisterData] = useState({
@@ -17,6 +17,8 @@ function Register() {
     });
   };
 
+  const navigate = useNavigate();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -30,6 +32,8 @@ function Register() {
         console.log("Registered:", data);
         setRegisterData({ fullName: "", email: "", password: "" }); // Clear form
         // navigate(0); // Refresh the page to show updated list
+        alert("Registration Successful! You can now log in.");
+        navigate("/login");
       }
     } catch (error) {
       console.error("Error registering:", error);

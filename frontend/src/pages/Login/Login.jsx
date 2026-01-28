@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -16,6 +16,8 @@ function Login() {
     });
   };
 
+  const navigate = useNavigate();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -29,6 +31,8 @@ function Login() {
         console.log("Logged in:", data);
         setLoginData({ email: "", password: "" }); // Clear form
         // navigate(0); // Refresh the page to show updated list
+        alert("Login Successful!");
+        navigate("/list");
       }
     } catch (error) {
       console.error("Error logging in:", error);

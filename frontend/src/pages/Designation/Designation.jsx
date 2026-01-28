@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Designation.css";
-import Navbar from "../../components/Navbar/Navbar";
+import Header from "../../components/Header/Header";
 
 function fetchDesignations() {
   return fetch("http://localhost:3000/designations")
@@ -49,7 +49,7 @@ function Designation() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="split-container">
         {/* Add Designation Form */}
         <section className="form-section">

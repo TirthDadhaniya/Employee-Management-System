@@ -6,7 +6,6 @@ import List from "./pages/List/List.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Register from "./pages/Register/Register.jsx";
 import Salary from "./pages/Salary/Salary.jsx";
-import Navbar from "./components/Navbar/Navbar.jsx";
 
 function App() {
   return (
