@@ -3,18 +3,24 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const connectDB = require("./backend/db");
-const employeeRoutes = require("./backend/routes/employee.routes");
-const salaryEntryRoutes = require("./backend/routes/salaryEntry.routes");
-const designationRoutes = require("./backend/routes/designation.routes");
-const authRoutes = require("./backend/routes/auth.routes");
-const errMiddleware = require("./backend/middleware/error.middleware");
+const connectDB = require("./db");
+const employeeRoutes = require("./routes/employee.routes");
+const salaryEntryRoutes = require("./routes/salaryEntry.routes");
+const designationRoutes = require("./routes/designation.routes");
+const authRoutes = require("./routes/auth.routes");
+const errMiddleware = require("./middleware/error.middleware");
+const PORT = 3000;
 
 const app = express();
 
-const PORT = 3000;
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.use("/employees", employeeRoutes);
