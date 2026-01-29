@@ -89,7 +89,7 @@ function Register() {
                 className="form-control"
               />
             </div>
-            <Button type="submit" className="btn btn-primary btn-block" text="Sign Up" />
+            <Button type="submit" variant="primary" fullWidth={true} text="Sign Up" />
           </form>
           <div className="auth-footer">
             <p>

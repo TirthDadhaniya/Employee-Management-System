@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
+import Button from "../Button/Button";
 
 function Header() {
   return (
@@ -9,28 +10,30 @@ function Header() {
         <nav className="action-buttons">
           <ul>
             <li>
-              <Link to="/login" className="btn btn-primary">
-                Login
+              <Link to="/login">
+                <Button text="Login" variant="primary" />
+              </Link>
+            </li>
+
+            <li>
+              <Link to="/list">
+                <Button text="List" variant="primary" />
               </Link>
             </li>
             <li>
-              <Link to="/list" className="btn btn-primary">
-                List
+              <Link to="/designation">
+                <Button text="Manage Designations" variant="primary" />
               </Link>
             </li>
             <li>
-              <Link to="/employee" className="btn btn-primary">
-                Manage Employees
+              <Link to="/employee">
+                <Button text="Manage Employees" variant="primary" />
               </Link>
             </li>
+
             <li>
-              <Link to="/designation" className="btn btn-primary">
-                Manage Designations
-              </Link>
-            </li>
-            <li>
-              <Link to="/salary" className="btn btn-primary">
-                Manage Salaries
+              <Link to="/salary">
+                <Button text="Manage Salaries" variant="primary" />
               </Link>
             </li>
           </ul>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import second from "../../components/Button/Button";
 import Button from "../../components/Button/Button";
 
 function Login() {
@@ -77,7 +76,12 @@ function Login() {
               />
             </div>
 
-            <Button type="submit" className="btn btn-primary btn-block" text="Sign In" />
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth={true}
+              text="Sign In"
+            />
           </form>
 
           <div className="auth-footer">
