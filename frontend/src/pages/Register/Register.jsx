@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
+import Button from "../../components/Button/Button";
 
 function Register() {
   const [registerData, setRegisterData] = useState({
@@ -88,9 +89,7 @@ function Register() {
                 className="form-control"
               />
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
-              Sign Up
-            </button>
+            <Button type="submit" className="btn btn-primary btn-block" text="Sign Up" />
           </form>
           <div className="auth-footer">
             <p>

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
+import second from "../../components/Button/Button";
+import Button from "../../components/Button/Button";
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -74,10 +76,10 @@ function Login() {
                 className="form-control"
               />
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
-              Sign In
-            </button>
+
+            <Button type="submit" className="btn btn-primary btn-block" text="Sign In" />
           </form>
+
           <div className="auth-footer">
             <p>
               Don't have an account? <Link to="/register">Create Account</Link>
