@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import styles from "./EmployeeTable.module.css";
-import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
-import { ModuleRegistry, themeAlpine, themeBalham, themeMaterial, themeQuartz } from "ag-grid-community"; // Import the theme object
-import Button from "../Button/Button";
 import { useNavigate } from "react-router-dom";
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
+import { themeQuartz } from "ag-grid-community";
+import axios from "axios";
+import Button from "../Button/Button";
+import styles from "./Table.module.css";
 
 const EmployeeTable = ({ title = "Table" }) => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const EmployeeTable = ({ title = "Table" }) => {
       sortable: true,
       filter: true,
       flex: 2,
-      minWidth: 200,
+      minWidth: 230,
       maxWidth: 270,
       cellDataType: "text",
     },
@@ -72,7 +72,12 @@ const EmployeeTable = ({ title = "Table" }) => {
       },
 
       valueFormatter: (params) => {
-        return params.value ? params.value.toLocaleDateString() : "";
+        if (!params.value) return "";
+        return params.value.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
       },
       filterParams: {
         comparator: (filterLocalDateAtMidnight, cellValue) => {
@@ -87,7 +92,6 @@ const EmployeeTable = ({ title = "Table" }) => {
         },
         browserDatePicker: true,
       },
-      valueFormatter: (p) => new Date(p.value).toLocaleDateString(),
       sortable: true,
       filter: true,
       flex: 1,
@@ -102,6 +106,8 @@ const EmployeeTable = ({ title = "Table" }) => {
       sortable: true,
       filter: true,
       flex: 1,
+      minWidth: 120,
+
       resizable: false,
     },
     {
@@ -113,7 +119,6 @@ const EmployeeTable = ({ title = "Table" }) => {
       cellRenderer: (params) => {
         return (
           <>
-            {/* <div className={styles["action-buttons"]}> */}
             <Button
               text="Edit"
               variant="primary"
@@ -121,7 +126,6 @@ const EmployeeTable = ({ title = "Table" }) => {
               onClick={() => navigate(`/employee?id=${params.data._id}`)}
             />
             <Button text="Delete" variant="danger" small={true} onClick={() => handleDeleteEmployee(params.data._id)} />
-            {/* </div> */}
           </>
         );
       },
@@ -144,6 +148,7 @@ const EmployeeTable = ({ title = "Table" }) => {
     try {
       const res = await axios.get("http://localhost:3000/employees");
       setRowData(res.data.data);
+      console.log(res.data.data);
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -168,7 +173,7 @@ const EmployeeTable = ({ title = "Table" }) => {
     <>
       <h3 className={styles["section-header"]}>{title}</h3>
       <div className="table-responsive">
-        <div style={{ height: 500, width: "100%" }}>
+        <div style={{ height: 530, width: "100%" }}>
           <AgGridReact
             rowData={rowData}
             columnDefs={columnDefs}
