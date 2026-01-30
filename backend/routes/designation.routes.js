@@ -4,6 +4,8 @@ const controller = require("../controllers/designation.controller");
 
 router.post("/", controller.createDesignation);
 router.get("/", controller.getAllDesignations);
+router.get("/:id", controller.getDesignationById);
+router.put("/:id", controller.updateDesignation);
 router.delete("/:id", controller.deleteDesignation);
 
 module.exports = router;
