@@ -1,20 +1,22 @@
-import { Link } from "react-router-dom";
-import "./Header.css";
+import { Link, useNavigate } from "react-router-dom";
+import styles from "./Header.module.css";
 import Button from "../Button/Button";
 
 function Header() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    alert("Logged out successfully!");
+    navigate("/login");
+  };
+
   return (
     <>
-      <header className="topbar">
+      <header className={styles.topbar}>
         <h2>Employee System</h2>
-        <nav className="action-buttons">
+        <nav>
           <ul>
-            <li>
-              <Link to="/login">
-                <Button text="Login" variant="primary" />
-              </Link>
-            </li>
-
             <li>
               <Link to="/list">
                 <Button text="List" variant="primary" />
@@ -35,6 +37,9 @@ function Header() {
               <Link to="/salary">
                 <Button text="Manage Salaries" variant="primary" />
               </Link>
+            </li>
+            <li>
+              <Button text="Logout" variant="danger" onClick={handleLogout} />
             </li>
           </ul>
         </nav>
