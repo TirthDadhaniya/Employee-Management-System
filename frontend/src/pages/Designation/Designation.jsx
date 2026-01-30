@@ -1,21 +1,36 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Designation.css";
+import { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Header from "../../components/Header/Header";
-
-function fetchDesignations() {
-  return fetch("http://localhost:3000/designations")
-    .then((res) => res.json())
-    .catch((error) => {
-      console.error("Error fetching designations:", error);
-      return [];
-    });
-}
+import styles from "./Designation.module.css";
+import Button from "../../components/Button/Button";
+import DesignationTable from "../../components/Table/DesignationTable";
 
 function Designation() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const designationId = searchParams.get("id");
+
   const [designation, setDesignation] = useState({
     name: "",
   });
+
+  useEffect(() => {
+    if (designationId) {
+      async function fetchDesignationToEdit() {
+        try {
+          const res = await axios.get(`http://localhost:3000/designations/${designationId}`);
+          setDesignation({
+            name: res.data.data.name,
+          });
+        } catch (error) {
+          console.error("Error fetching designation details:", error);
+        }
+      }
+      fetchDesignationToEdit();
+    }
+  }, [designationId]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -25,37 +40,44 @@ function Designation() {
     });
   };
 
-  const navigate = useNavigate();
-
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sending data:", designation);
+
+    const isEditing = designationId && designationId !== "";
+
+    const url = isEditing
+      ? `http://localhost:3000/designations/${designationId}`
+      : `http://localhost:3000/designations`;
+
+    const method = isEditing ? "PUT" : "POST";
+
     try {
-      const res = await fetch("http://localhost:3000/designations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(designation),
+      const response = await axios({
+        url: url,
+        method: method,
+        data: designation,
       });
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Designation added:", data);
-        setDesignation({ name: "" }); // Clear form
-        // navigate(0); // Refresh the page to show updated list
+
+      if (response.status === 200 || response.status === 201) {
+        alert(isEditing ? "Designation Updated!" : "Designation Added!");
+        setDesignation({ name: "" });
+        navigate("/designation");
       }
     } catch (error) {
-      console.error("Error adding designation:", error);
+      console.error("Error submitting designation:", error);
+      alert(error.response?.data?.message || "Failed to save designation.");
     }
   };
 
   return (
     <>
       <Header />
-      <div className="split-container">
+      <div className={styles["split-container"]}>
         {/* Add Designation Form */}
-        <section className="form-section">
-          <h3 className="section-header">Add New Designation</h3>
+        <section className={styles["form-section"]}>
+          <h3 className={styles["section-header"]}>Add New Designation</h3>
           <form id="designationForm" onSubmit={onSubmit}>
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label htmlFor="name">Designation Name</label>
               <input
                 type="text"
@@ -68,28 +90,15 @@ function Designation() {
               />
             </div>
 
-            <div className="action-buttons">
-              <button type="submit" className="btn btn-primary flex-1">
-                Add Designation
-              </button>
+            <div className={styles["action-buttons"]}>
+              <Button text="Add Designation" type="submit" variant="primary" />
             </div>
           </form>
         </section>
 
         {/* Designation List */}
-        <section className="list-section">
-          <h3 className="section-header">Current Designations</h3>
-          <div className="table-responsive">
-            <table id="designationTable" className="display w-100">
-              <thead>
-                <tr>
-                  <th>Designation</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="designationTableBody"></tbody>
-            </table>
-          </div>
+        <section className={styles["list-section"]}>
+          <DesignationTable title="Current Designations" />
         </section>
       </div>
     </>
