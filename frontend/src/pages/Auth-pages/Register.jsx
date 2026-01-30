@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Register.css";
+import styles from "./Auth.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 
@@ -43,14 +43,14 @@ function Register() {
 
   return (
     <>
-      <div className="auth-wrapper">
-        <div className="auth-card">
-          <div className="auth-header">
+      <div className={styles["auth-wrapper"]}>
+        <div className={styles["auth-card"]}>
+          <div className={styles["auth-header"]}>
             <h2>Create Account</h2>
             <p>Register to get started</p>
           </div>
-          <form id="registerForm" className="auth-form" onSubmit={onSubmit}>
-            <div className="form-group">
+          <form id="registerForm" className={styles["auth-form"]} onSubmit={onSubmit}>
+            <div className={styles["form-group"]}>
               <label htmlFor="fullName">Full Name</label>
               <input
                 type="text"
@@ -60,10 +60,10 @@ function Register() {
                 value={registerData.fullName}
                 onChange={handleInput}
                 required
-                className="form-control"
+                className={styles["form-control"]}
               />
             </div>
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label htmlFor="email">Email Address</label>
               <input
                 type="email"
@@ -73,10 +73,10 @@ function Register() {
                 value={registerData.email}
                 onChange={handleInput}
                 required
-                className="form-control"
+                className={styles["form-control"]}
               />
             </div>
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -86,12 +86,12 @@ function Register() {
                 value={registerData.password}
                 onChange={handleInput}
                 required
-                className="form-control"
+                className={styles["form-control"]}
               />
             </div>
             <Button type="submit" variant="primary" fullWidth={true} text="Sign Up" />
           </form>
-          <div className="auth-footer">
+          <div className={styles["auth-footer"]}>
             <p>
               Already have an account? <Link to="/login">Sign In</Link>
             </p>

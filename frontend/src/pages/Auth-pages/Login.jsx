@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Login.css";
+import styles from "./Auth.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
 
@@ -42,14 +42,14 @@ function Login() {
 
   return (
     <>
-      <div className="auth-wrapper">
-        <div className="auth-card">
-          <div className="auth-header">
+      <div className={styles["auth-wrapper"]}>
+        <div className={styles["auth-card"]}>
+          <div className={styles["auth-header"]}>
             <h2>Welcome Back</h2>
             <p>Please login to your account</p>
           </div>
-          <form id="loginForm" className="auth-form" onSubmit={onSubmit}>
-            <div className="form-group">
+          <form id="loginForm" className={styles["auth-form"]} onSubmit={onSubmit}>
+            <div className={styles["form-group"]}>
               <label htmlFor="email">Email Address</label>
               <input
                 type="email"
@@ -59,10 +59,10 @@ function Login() {
                 required
                 value={loginData.email}
                 onChange={handleInput}
-                className="form-control"
+                className={styles["form-control"]}
               />
             </div>
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -72,19 +72,14 @@ function Login() {
                 value={loginData.password}
                 onChange={handleInput}
                 required
-                className="form-control"
+                className={styles["form-control"]}
               />
             </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              fullWidth={true}
-              text="Sign In"
-            />
+            <Button type="submit" variant="primary" fullWidth={true} text="Sign In" />
           </form>
 
-          <div className="auth-footer">
+          <div className={styles["auth-footer"]}>
             <p>
               Don't have an account? <Link to="/register">Create Account</Link>
             </p>

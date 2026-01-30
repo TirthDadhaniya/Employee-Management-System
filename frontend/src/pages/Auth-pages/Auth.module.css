@@ -1,22 +1,3 @@
-:root {
-  --primary-color: #007bff;
-  --primary-hover: #0056b3;
-  --success-color: #28a745;
-  --success-hover: #218838;
-  --danger-color: #dc3545;
-  --danger-hover: #c82333;
-  --background-color: #f5f7fa;
-  --card-bg: #ffffff;
-  --text-color: #333;
-  --text-color-secondary: #666;
-  --label-color: #555;
-  --border-color: #ddd;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --radius: 6px;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
 .auth-wrapper {
   display: flex;
   justify-content: center;
