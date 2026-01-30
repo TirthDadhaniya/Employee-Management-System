@@ -3,6 +3,15 @@ const SalaryEntry = require("../model/salaryEntry");
 // CREATE salary entry
 exports.createSalaryEntry = async (req, res) => {
   try {
+    const { e_id, month, year, salary } = req.body;
+
+    if (!e_id || !month || !year || !salary) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required: e_id, month, year, salary",
+      });
+    }
+
     const salaryEntry = await SalaryEntry.create(req.body);
     res.status(201).json({
       success: true,

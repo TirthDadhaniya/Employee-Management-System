@@ -5,7 +5,7 @@ exports.createDesignation = async (req, res) => {
   try {
     const { name } = req.body;
     if (!name) {
-      return res.status(400).json({ message: "Designation name is visible" });
+      return res.status(400).json({ message: "Designation name is required" });
     }
     const existing = await Designation.findOne({ name });
     if (existing) {
@@ -24,6 +24,35 @@ exports.getAllDesignations = async (req, res) => {
   try {
     const designations = await Designation.find().sort({ createdAt: -1 });
     res.status(200).json({ data: designations });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Get Designation by ID
+exports.getDesignationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const designation = await Designation.findById(id);
+    if (!designation) {
+      return res.status(404).json({ message: "Designation not found" });
+    }
+    res.status(200).json({ data: designation });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Update Designation
+exports.updateDesignation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const updated = await Designation.findByIdAndUpdate(id, { name }, { new: true, runValidators: true });
+    if (!updated) {
+      return res.status(404).json({ message: "Designation not found" });
+    }
+    res.status(200).json({ message: "Designation updated successfully", data: updated });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

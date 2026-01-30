@@ -3,7 +3,25 @@ const User = require("../model/user");
 // Register
 exports.register = async (req, res) => {
   try {
-    const registeredUser = await User.create(req.body);
+    const { fullName, email, password } = req.body;
+
+    if (!fullName || !email || !password) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Please provide fullName, email and password",
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        status: "fail",
+        message: "User with this email already exists",
+      });
+    }
+
+    const registeredUser = await User.create({ fullName, email, password });
     res.status(201).json({
       status: "success",
       data: registeredUser,
@@ -11,7 +29,7 @@ exports.register = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       status: "fail",
-      error: error.message,
+      message: error.message,
     });
   }
 };

@@ -35,7 +35,7 @@ exports.getAllEmployees = async (req, res) => {
 // Get Employee by ID
 exports.getEmployeeById = async (req, res) => {
   try {
-    const employee = await Employee.findById(req.params.id);
+    const employee = await Employee.findById(req.params.id).populate("e_designation");
     if (!employee) {
       return res.status(404).json({
         status: "fail",
