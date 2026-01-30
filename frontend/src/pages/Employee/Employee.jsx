@@ -1,16 +1,34 @@
 import { useEffect, useState } from "react";
-import "./Employee.css";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import styles from "./Employee.module.css";
 import Header from "../../components/Header/Header";
+import Button from "../../components/Button/Button";
+import EmployeeTable from "../../components/Table/EmployeeTable";
 
 function Employee() {
-  const [designations, setDesignations] = useState([]); // For Employee Form
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const employeeId = searchParams.get("id");
+
+  const [designations, setDesignations] = useState([]);
+
+  const [employee, setEmployee] = useState({
+    db_id: "", // Hidden field
+    e_name: "",
+    e_mail: "",
+    e_phone: "",
+    e_gender: "",
+    e_designation: "",
+    e_dateOfJoining: "",
+    e_initialSalary: "",
+  });
 
   useEffect(() => {
     async function fetchDesignations() {
       try {
-        const res = await fetch("http://localhost:3000/employees/designations");
-        const data = await res.json();
-        setDesignations(data.data);
+        const res = await axios.get("http://localhost:3000/designations");
+        setDesignations(res.data.data);
       } catch (error) {
         console.error("Error fetching designations:", error);
       }
@@ -18,16 +36,30 @@ function Employee() {
     fetchDesignations();
   }, []);
 
-  const [employee, setEmployee] = useState({
-    db_id: "", // Hidden field
-    e_name: "",
-    e_mail: "",
-    e_phone: "",
-    employee_gender: "",
-    e_designation: "",
-    e_joining: "",
-    e_initialsalary: "",
-  });
+  useEffect(() => {
+    if (employeeId) {
+      async function fetchEmployeeToEdit() {
+        try {
+          const res = await axios.get(`http://localhost:3000/employees/${employeeId}`);
+          const data = res.data.data;
+
+          setEmployee({
+            db_id: data._id, // Set the hidden ID
+            e_name: data.e_name,
+            e_mail: data.e_mail,
+            e_phone: data.e_phone,
+            e_gender: data.e_gender,
+            e_designation: data.e_designation?._id || data.e_designation, // Handle populated ID
+            e_dateOfJoining: data.e_dateOfJoining ? data.e_dateOfJoining.split("T")[0] : "",
+            e_initialSalary: data.e_initialSalary,
+          });
+        } catch (error) {
+          console.error("Error fetching employee details:", error);
+        }
+      }
+      fetchEmployeeToEdit();
+    }
+  }, [employeeId]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -43,60 +75,48 @@ function Employee() {
     // Determine if we are Adding or Editing
     const isEditing = employee.db_id && employee.db_id !== "";
 
-    // 2. Set the URL and Method accordingly
-    // If editing, we add the ID to the URL (e.g., /api/employees/123)
     const url = isEditing ? `http://localhost:3000/employees/${employee.db_id}` : `http://localhost:3000/employees`;
 
     const method = isEditing ? "PUT" : "POST";
 
     try {
-      const response = await fetch(url, {
+      const response = await axios({
+        url: url,
         method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(employee), // Send the whole state object
+        data: employee,
       });
 
-      const result = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         alert(isEditing ? "Employee Updated!" : "Employee Added!");
-
-        // 3. Reset form after successful save
         setEmployee({
           db_id: "",
           e_name: "",
           e_mail: "",
           e_phone: "",
-          employee_gender: "",
+          e_gender: "",
           e_designation: "",
-          e_joining: "",
-          e_initialsalary: "",
+          e_dateOfJoining: "",
+          e_initialSalary: "",
         });
-
-        // Optional: If you have a list function, call it here to refresh the table
-        // fetchEmployees();
-      } else {
-        alert("Error: " + result.error);
+        navigate("/employee");
       }
     } catch (err) {
       console.error("Connection failed:", err);
-      alert("Server is down or unreachable.");
+      alert(err.response?.data?.error || "Server is down or unreachable.");
     }
   };
 
   return (
     <>
       <Header />
-      <div className="split-container">
+      <div className={styles["split-container"]}>
         {/* Form Section */}
-        <div className="form-section">
-          <h3 className="section-header">Add / Edit Employee</h3>
+        <section className={styles["form-section"]}>
+          <h3 className={styles["section-header"]}>Add / Edit Employee</h3>
           <form id="employeeForm" onSubmit={onSubmit}>
-            <input type="hidden" name="db_id" id="db_id" />
+            <input type="hidden" name="db_id" id="db_id" value={employee.db_id} />
 
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label>Name</label>
               <input
                 type="text"
@@ -108,7 +128,7 @@ function Employee() {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label>Email</label>
               <input
                 type="email"
@@ -120,7 +140,7 @@ function Employee() {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label>Phone</label>
               <input
                 type="text"
@@ -132,16 +152,16 @@ function Employee() {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label>Gender</label>
-              <div className="gender-radio-group">
+              <div className={styles["gender-radio-group"]}>
                 <label>
                   <input
                     type="radio"
-                    name="employee_gender"
+                    name="e_gender"
                     value="Male"
                     onChange={handleInput}
-                    checked={employee.employee_gender === "Male"}
+                    checked={employee.e_gender === "Male"}
                     required
                   />{" "}
                   Male
@@ -149,10 +169,10 @@ function Employee() {
                 <label>
                   <input
                     type="radio"
-                    name="employee_gender"
+                    name="e_gender"
                     value="Female"
                     onChange={handleInput}
-                    checked={employee.employee_gender === "Female"}
+                    checked={employee.e_gender === "Female"}
                     required
                   />{" "}
                   Female
@@ -160,10 +180,10 @@ function Employee() {
                 <label>
                   <input
                     type="radio"
-                    name="employee_gender"
+                    name="e_gender"
                     value="Other"
                     onChange={handleInput}
-                    checked={employee.employee_gender === "Other"}
+                    checked={employee.e_gender === "Other"}
                     required
                   />{" "}
                   Other
@@ -171,7 +191,7 @@ function Employee() {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label>Designation</label>
               <select
                 name="e_designation"
@@ -181,55 +201,48 @@ function Employee() {
                 required
               >
                 <option value="">Select Designation</option>
-                {/* <option value="ahd">Ahmedabad</option> */}
+                {designations.map((designation) => (
+                  <option key={designation._id} value={designation._id}>
+                    {designation.name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            <div className="form-group">
+            <div className={styles["form-group"]}>
               <label>Date of Joining</label>
-              <input type="date" name="e_joining" value={employee.e_joining} onChange={handleInput} required />
-            </div>
-
-            <div className="form-group">
-              <label>Initial Salary</label>
               <input
-                type="number"
-                name="e_initialsalary"
-                value={employee.e_initialsalary}
-                placeholder="0.00"
+                type="date"
+                name="e_dateOfJoining"
+                value={employee.e_dateOfJoining}
                 onChange={handleInput}
                 required
               />
             </div>
 
-            <div className="action-buttons">
-              <button type="submit" className="btn btn-primary flex-1">
-                Save Employee
-              </button>
-              <button type="button" id="resetBtn" className="btn btn-secondary hidden">
-                Cancel
-              </button>
+            <div className={styles["form-group"]}>
+              <label>Initial Salary</label>
+              <input
+                type="number"
+                name="e_initialSalary"
+                value={employee.e_initialSalary}
+                placeholder="0.00"
+                onChange={handleInput}
+                min="0"
+                required
+              />
+            </div>
+
+            <div className={styles["action-buttons"]}>
+              <Button text="Save Employee" type="submit" variant="primary" />
             </div>
           </form>
-        </div>
+        </section>
 
         {/* List Section */}
-        <div className="list-section">
-          <h3 className="section-header">Employee List</h3>
-          <div className="table-responsive">
-            <table id="employeeTable" className="display w-100">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Designation</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="employeeTableBody"></tbody>
-            </table>
-          </div>
-        </div>
+        <section className={styles["list-section"]}>
+          <EmployeeTable title="All Employees" />
+        </section>
       </div>
     </>
   );
