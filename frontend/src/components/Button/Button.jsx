@@ -5,6 +5,7 @@ const Button = ({
   type = "button",
   variant = "primary", // "primary" | "secondary" | "danger" | "success"
   fullWidth = false,
+  small = false,
   onClick = null,
   disabled = false,
   className = "", // For additional custom classes if needed
@@ -14,18 +15,14 @@ const Button = ({
     styles.btn,
     styles[`btn-${variant}`],
     fullWidth ? styles["btn-block"] : "",
+    small ? styles["btn-sm"] : "",
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <button
-      type={type}
-      className={buttonClasses}
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <button type={type} className={buttonClasses} onClick={onClick} disabled={disabled}>
       {text}
     </button>
   );
