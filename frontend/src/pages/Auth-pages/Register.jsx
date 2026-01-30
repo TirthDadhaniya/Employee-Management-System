@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import styles from "./Auth.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
@@ -23,21 +24,13 @@ function Register() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(registerData),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Registered:", data);
-        setRegisterData({ fullName: "", email: "", password: "" }); // Clear form
-        // navigate(0); // Refresh the page to show updated list
-        alert("Registration Successful! You can now log in.");
-        navigate("/login");
-      }
+      await axios.post("http://localhost:3000/auth/register", registerData);
+      setRegisterData({ fullName: "", email: "", password: "" });
+      alert("Registration Successful! You can now log in.");
+      navigate("/login");
     } catch (error) {
       console.error("Error registering:", error);
+      alert(error.response?.data?.message || "Registration failed. Please try again.");
     }
   };
 

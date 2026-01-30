@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import styles from "./Auth.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
@@ -22,21 +23,14 @@ function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Logged in:", data);
-        setLoginData({ email: "", password: "" }); // Clear form
-        // navigate(0); // Refresh the page to show updated list
-        alert("Login Successful!");
-        navigate("/list");
-      }
+      const res = await axios.post("http://localhost:3000/auth/login", loginData);
+      localStorage.setItem("token", res.data.token);
+      setLoginData({ email: "", password: "" });
+      alert("Login Successful!");
+      navigate("/list");
     } catch (error) {
       console.error("Error logging in:", error);
+      alert(error.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
