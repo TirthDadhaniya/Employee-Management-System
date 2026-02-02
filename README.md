@@ -1,137 +1,150 @@
 # Employee Management System
 
-A full-stack Employee Management System designed to streamline HR tasks. This application enables efficient management of employee records, designations, salary entries, and includes secure user authentication.
+A full-stack Employee Management System designed to streamline HR tasks. This application enables efficient management of employee records, designations, and salary entries, featuring a robust backend API and a modern React frontend with secure user authentication.
 
 ## Features
 
-- **User Authentication:**
-  - Secure Login and Registration pages.
-  - Password hashing using `bcryptjs` for security.
-- **Employee Management:**
-  - Add, update, delete, and view employee profiles.
-  - Track personal details: Name, Email, Phone, Gender, DOJ, etc.
-- **Designation Management:**
+- **User Authentication:** 
+  - Secure Login and Registration pages using JWT.
+  - Password hashing for security.
+- **Employee Management:** 
+  - CRUD operations for employee profiles.
+  - Form validation using `react-hook-form`.
+  - Details include: Name, Email, Phone, Gender, Designation, Date of Joining, Initial Salary.
+- **Designation Management:** 
   - Create and manage job titles/designations.
-- **Salary Management:**
+- **Salary Management:** 
   - Record and track monthly salary entries for employees.
-  - Filter salary records by Employee, Month, and Year.
-- **Responsive Frontend:**
-  - Modern UI with responsive design.
-  - Interactive data tables for searching, sorting, and pagination.
-  - Form validation for data integrity.
+  - Filter and view salary history.
+- **Modern Frontend:** 
+  - Built with React and Vite.
+  - Responsive design with CSS Modules.
+  - Real-time form validation.
 
 ## Tech Stack
 
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+), jQuery, DataTables
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB (using Mongoose ODM)
-- **Authentication:** `bcryptjs` (for password encryption)
-- **Environment Management:** `dotenv`
+- **Frontend:** 
+  - React (Vite)
+  - React Router DOM
+  - React Hook Form
+  - Axios
+  - CSS Modules
+- **Backend:** 
+  - Node.js
+  - Express.js
+- **Database:** 
+  - MongoDB (Mongoose)
+- **Authentication:** 
+  - JSON Web Tokens (JWT)
+  - bcryptjs
 
 ## Prerequisites
 
-Before running this project, ensure you have the following installed:
-
 - [Node.js](https://nodejs.org/) (v14 or higher)
-- [MongoDB](https://www.mongodb.com/try/download/community) (running locally or a cloud instance like MongoDB Atlas)
+- [MongoDB](https://www.mongodb.com/try/download/community) (Local or Atlas)
 
 ## Setup & Installation
 
-1. **Clone the repository** (or download the source code):
+The project is divided into two parts: `backend` and `frontend`.
 
-   ```bash
-   git clone <repository_url>
-   cd employee-api
-   ```
+### 1. Clone the repository
 
-2. **Install Dependencies:**
-   Navigate to the project root and run:
+```bash
+git clone <repository_url>
+cd "Employee Management System"
+```
 
-   ```bash
-   npm install
-   ```
+### 2. Backend Setup
 
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory and add your MongoDB connection string:
+Navigate to the backend folder:
 
-   ```env
-   MONGO_URL=mongodb://127.0.0.1:27017/employee-api
-   ```
+```bash
+cd backend
+```
 
-   _(Note: Adjust the URL if your database is hosted elsewhere)_
+Install dependencies:
 
-4. **Start the Database:**
-   Ensure your local MongoDB server is running.
+```bash
+npm install
+```
 
-5. **Start the Application:**
-   For development (with auto-restart):
+Create a `.env` file in the `backend` directory:
 
-   ```bash
-   npm run dev
-   ```
+```env
+MONGO_URL=mongodb://127.0.0.1:27017/employee-api
+JWT_SECRET=your_jwt_secret_key
+PORT=3000
+```
 
-   For production:
+Start the backend server:
 
-   ```bash
-   npm start
-   ```
+```bash
+npm run dev
+```
+The server will start on `http://localhost:3000`.
 
-   The server will start on `http://localhost:3000`.
+### 3. Frontend Setup
+
+Open a new terminal and navigate to the frontend folder:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the React development server:
+
+```bash
+npm run dev
+```
+The application will usually run on `http://localhost:5173`.
 
 ## Project Structure
 
 ```
-employee-api/
+Employee Management System/
 ├── backend/
-│   ├── controllers/      # Logic for handling requests (Auth, Employee, etc.)
-│   ├── model/            # Mongoose schemas (User, Employee, Salary, etc.)
-│   ├── routes/           # API route definitions
-│   └── db.js             # Database connection logic
+│   ├── controllers/      # Route controllers (Auth, Employee, etc.)
+│   ├── middleware/       # Custom middleware (Error handling)
+│   ├── model/            # Mongoose models
+│   ├── routes/           # Express routes
+│   ├── db.js             # Database connection
+│   └── server.js         # Entry point
 ├── frontend/
-│   ├── css/              # Stylesheets
-│   ├── js/               # Frontend logic and API integration
-│   └── pages/            # HTML views (Login, Register, Dashboard, etc.)
-├── .env                  # Environment variables (not committed)
-├── server.js             # Entry point of the server
-└── package.json          # Project dependencies and scripts
+│   ├── src/
+│   │   ├── components/   # Reusable UI components (Button, Header, Tables)
+│   │   ├── pages/        # Page components (Login, Employee, etc.)
+│   │   ├── App.jsx       # Main App component
+│   │   └── main.jsx      # React entry point
+│   ├── vite.config.js    # Vite configuration
+│   └── package.json      # Frontend dependencies
+└── README.md
 ```
 
 ## API Endpoints
 
 ### Authentication
-
-- `POST /auth/register` - Register a new admin user
-- `POST /auth/login` - Login to the dashboard
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login and receive token
 
 ### Employees
-
 - `GET /employees` - List all employees
+- `GET /employees/:id` - Get single employee details
 - `POST /employees` - Add a new employee
 - `PUT /employees/:id` - Update employee details
 - `DELETE /employees/:id` - Remove an employee
 
 ### Designations
-
 - `GET /designations` - List all designations
 - `POST /designations` - Create a new designation
+- `PUT /designations/:id` - Update designation
 
 ### Salary Entries
-
 - `GET /salary-entries` - List salary history
 - `POST /salary-entries` - Add a salary record
-
-## Usage
-
-1. Open `http://localhost:3000` (or the frontend file path) in your browser.
-2. Register a new account.
-3. Login to access the dashboard.
-4. Use the navigation to manage Employees, Designations, and Salaries.
-
-   ```
-
-   The backend server will start on `http://localhost:3000`.
-
-   ```
-
-5. **Run the Frontend:**
-   Simply open `index.html` in your browser. It will redirect you to the main dashboard.
+- `PUT /salary-entries/:id` - Update salary record
