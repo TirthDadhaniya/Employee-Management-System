@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../../components/Header/Header";
@@ -13,12 +14,20 @@ function Salary() {
 
   const [employees, setEmployees] = useState([]);
 
-  const [salary, setSalary] = useState({
-    salary_id: "",
-    e_id: "",
-    year: "",
-    month: "",
-    salary: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      salary_id: "",
+      e_id: "",
+      year: "",
+      month: "",
+      salary: "",
+    },
   });
 
   useEffect(() => {
@@ -40,37 +49,33 @@ function Salary() {
           const res = await axios.get(`http://localhost:3000/salary-entries/${salaryId}`);
           const data = res.data.data;
 
-          setSalary({
-            salary_id: data._id,
-            e_id: data.e_id?._id || data.e_id,
-            year: data.year,
-            month: data.month,
-            salary: data.salary,
-          });
+          setValue("salary_id", data._id);
+          setValue("e_id", data.e_id?._id || data.e_id);
+          setValue("year", data.year);
+          setValue("month", data.month);
+          setValue("salary", data.salary);
         } catch (error) {
           console.error("Error fetching salary details:", error);
         }
       }
       fetchSalaryToEdit();
+    } else {
+      reset({
+        salary_id: "",
+        e_id: "",
+        year: "",
+        month: "",
+        salary: "",
+      });
     }
-  }, [salaryId]);
+  }, [salaryId, setValue, reset]);
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setSalary({
-      ...salary,
-      [name]: value,
-    });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     // Determine if we are Adding or Editing
-    const isEditing = salary.salary_id && salary.salary_id !== "";
+    const isEditing = data.salary_id && data.salary_id !== "";
 
     const url = isEditing
-      ? `http://localhost:3000/salary-entries/${salary.salary_id}`
+      ? `http://localhost:3000/salary-entries/${data.salary_id}`
       : `http://localhost:3000/salary-entries`;
 
     const method = isEditing ? "PUT" : "POST";
@@ -79,12 +84,12 @@ function Salary() {
       const response = await axios({
         url: url,
         method: method,
-        data: salary,
+        data: data,
       });
 
       if (response.status === 200 || response.status === 201) {
         alert(isEditing ? "Salary Updated!" : "Salary Added!");
-        setSalary({
+        reset({
           salary_id: "",
           e_id: "",
           year: "",
@@ -106,12 +111,16 @@ function Salary() {
         {/* Salary Form */}
         <section className={styles["form-section"]}>
           <h3 className={styles["section-header"]}>Add / Edit Salary</h3>
-          <form id="salaryForm" onSubmit={onSubmit}>
-            <input type="hidden" name="salary_id" id="salary_id" value={salary.salary_id} />
+          <form id="salaryForm" onSubmit={handleSubmit(onSubmit)}>
+            <input type="hidden" {...register("salary_id")} />
 
             <div className={styles["form-group"]}>
               <label>Employee</label>
-              <select name="e_id" id="employeeDropdown" onChange={handleInput} value={salary.e_id} required>
+              <select
+                id="employeeDropdown"
+                className={errors.e_id ? styles["input-error"] : ""}
+                {...register("e_id", { required: "Please select an employee" })}
+              >
                 <option value="">Select Employee</option>
                 {employees.map((e) => (
                   <option key={e._id} value={e._id}>
@@ -119,11 +128,16 @@ function Salary() {
                   </option>
                 ))}
               </select>
+              {errors.e_id && <span className={styles["error-message"]}>{errors.e_id.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Year</label>
-              <select name="year" id="yearDropdown" required onChange={handleInput} value={salary.year}>
+              <select
+                id="yearDropdown"
+                className={errors.year ? styles["input-error"] : ""}
+                {...register("year", { required: "Please select a year" })}
+              >
                 <option value="">Select Year</option>
                 {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
                   <option key={year} value={year}>
@@ -131,11 +145,16 @@ function Salary() {
                   </option>
                 ))}
               </select>
+              {errors.year && <span className={styles["error-message"]}>{errors.year.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Month</label>
-              <select name="month" id="monthDropdown" required onChange={handleInput} value={salary.month}>
+              <select
+                id="monthDropdown"
+                className={errors.month ? styles["input-error"] : ""}
+                {...register("month", { required: "Please select a month" })}
+              >
                 <option value="">Select Month</option>
                 <option value="January">January</option>
                 <option value="February">February</option>
@@ -150,23 +169,29 @@ function Salary() {
                 <option value="November">November</option>
                 <option value="December">December</option>
               </select>
+              {errors.month && <span className={styles["error-message"]}>{errors.month.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Salary Amount</label>
               <input
                 type="number"
-                name="salary"
                 placeholder="0.00"
-                required
                 min="0"
-                onChange={handleInput}
-                value={salary.salary}
+                className={errors.salary ? styles["input-error"] : ""}
+                {...register("salary", {
+                  required: "Salary amount is required",
+                  min: {
+                    value: 0,
+                    message: "Salary cannot be negative",
+                  },
+                })}
               />
+              {errors.salary && <span className={styles["error-message"]}>{errors.salary.message}</span>}
             </div>
 
             <div className={styles["action-buttons"]}>
-              <Button text="Save Entry" type="submit" variant="primary" />
+              <Button text={isSubmitting ? "Saving..." : "Save Entry"} type="submit" variant="primary" disabled={isSubmitting} />
             </div>
           </form>
         </section>

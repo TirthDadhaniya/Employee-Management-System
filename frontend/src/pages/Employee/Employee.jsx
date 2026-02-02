@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./Employee.module.css";
@@ -13,16 +14,27 @@ function Employee() {
 
   const [designations, setDesignations] = useState([]);
 
-  const [employee, setEmployee] = useState({
-    db_id: "", // Hidden field
-    e_name: "",
-    e_mail: "",
-    e_phone: "",
-    e_gender: "",
-    e_designation: "",
-    e_dateOfJoining: "",
-    e_initialSalary: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      db_id: "",
+      e_name: "",
+      e_mail: "",
+      e_phone: "",
+      e_gender: "",
+      e_designation: "",
+      e_dateOfJoining: "",
+      e_initialSalary: "",
+    },
   });
+
+  const selectedGender = watch("e_gender");
 
   useEffect(() => {
     async function fetchDesignations() {
@@ -43,39 +55,38 @@ function Employee() {
           const res = await axios.get(`http://localhost:3000/employees/${employeeId}`);
           const data = res.data.data;
 
-          setEmployee({
-            db_id: data._id, // Set the hidden ID
-            e_name: data.e_name,
-            e_mail: data.e_mail,
-            e_phone: data.e_phone,
-            e_gender: data.e_gender,
-            e_designation: data.e_designation?._id || data.e_designation, // Handle populated ID
-            e_dateOfJoining: data.e_dateOfJoining ? data.e_dateOfJoining.split("T")[0] : "",
-            e_initialSalary: data.e_initialSalary,
-          });
+          setValue("db_id", data._id);
+          setValue("e_name", data.e_name);
+          setValue("e_mail", data.e_mail);
+          setValue("e_phone", data.e_phone);
+          setValue("e_gender", data.e_gender);
+          setValue("e_designation", data.e_designation?._id || data.e_designation);
+          setValue("e_dateOfJoining", data.e_dateOfJoining ? data.e_dateOfJoining.split("T")[0] : "");
+          setValue("e_initialSalary", data.e_initialSalary);
         } catch (error) {
           console.error("Error fetching employee details:", error);
         }
       }
       fetchEmployeeToEdit();
+    } else {
+      reset({
+        db_id: "",
+        e_name: "",
+        e_mail: "",
+        e_phone: "",
+        e_gender: "",
+        e_designation: "",
+        e_dateOfJoining: "",
+        e_initialSalary: "",
+      });
     }
-  }, [employeeId]);
+  }, [employeeId, setValue, reset]);
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setEmployee({
-      ...employee,
-      [name]: value,
-    });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     // Determine if we are Adding or Editing
-    const isEditing = employee.db_id && employee.db_id !== "";
+    const isEditing = data.db_id && data.db_id !== "";
 
-    const url = isEditing ? `http://localhost:3000/employees/${employee.db_id}` : `http://localhost:3000/employees`;
+    const url = isEditing ? `http://localhost:3000/employees/${data.db_id}` : `http://localhost:3000/employees`;
 
     const method = isEditing ? "PUT" : "POST";
 
@@ -83,12 +94,12 @@ function Employee() {
       const response = await axios({
         url: url,
         method: method,
-        data: employee,
+        data: data,
       });
 
       if (response.status === 200 || response.status === 201) {
         alert(isEditing ? "Employee Updated!" : "Employee Added!");
-        setEmployee({
+        reset({
           db_id: "",
           e_name: "",
           e_mail: "",
@@ -113,43 +124,62 @@ function Employee() {
         {/* Form Section */}
         <section className={styles["form-section"]}>
           <h3 className={styles["section-header"]}>Add / Edit Employee</h3>
-          <form id="employeeForm" onSubmit={onSubmit}>
-            <input type="hidden" name="db_id" id="db_id" value={employee.db_id} />
+          <form id="employeeForm" onSubmit={handleSubmit(onSubmit)}>
+            <input type="hidden" {...register("db_id")} />
 
             <div className={styles["form-group"]}>
               <label>Name</label>
               <input
                 type="text"
-                name="e_name"
                 placeholder="Full Name"
-                required
-                value={employee.e_name}
-                onChange={handleInput}
+                className={errors.e_name ? styles["input-error"] : ""}
+                {...register("e_name", {
+                  required: "Name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Name must be at least 2 characters",
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "Name cannot exceed 50 characters",
+                  },
+                })}
               />
+              {errors.e_name && <span className={styles["error-message"]}>{errors.e_name.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Email</label>
               <input
                 type="email"
-                name="e_mail"
                 placeholder="email@example.com"
-                required
-                value={employee.e_mail}
-                onChange={handleInput}
+                className={errors.e_mail ? styles["input-error"] : ""}
+                {...register("e_mail", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Please enter a valid email address",
+                  },
+                })}
               />
+              {errors.e_mail && <span className={styles["error-message"]}>{errors.e_mail.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Phone</label>
               <input
                 type="text"
-                name="e_phone"
                 placeholder="Phone Number"
-                required
-                value={employee.e_phone}
-                onChange={handleInput}
+                className={errors.e_phone ? styles["input-error"] : ""}
+                {...register("e_phone", {
+                  required: "Phone number is required",
+                  pattern: {
+                    value: /^[0-9]{10,15}$/,
+                    message: "Please enter a valid phone number (10-15 digits)",
+                  },
+                })}
               />
+              {errors.e_phone && <span className={styles["error-message"]}>{errors.e_phone.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
@@ -158,47 +188,40 @@ function Employee() {
                 <label>
                   <input
                     type="radio"
-                    name="e_gender"
                     value="Male"
-                    onChange={handleInput}
-                    checked={employee.e_gender === "Male"}
-                    required
+                    {...register("e_gender", { required: "Please select a gender" })}
+                    checked={selectedGender === "Male"}
                   />{" "}
                   Male
                 </label>
                 <label>
                   <input
                     type="radio"
-                    name="e_gender"
                     value="Female"
-                    onChange={handleInput}
-                    checked={employee.e_gender === "Female"}
-                    required
+                    {...register("e_gender", { required: "Please select a gender" })}
+                    checked={selectedGender === "Female"}
                   />{" "}
                   Female
                 </label>
                 <label>
                   <input
                     type="radio"
-                    name="e_gender"
                     value="Other"
-                    onChange={handleInput}
-                    checked={employee.e_gender === "Other"}
-                    required
+                    {...register("e_gender", { required: "Please select a gender" })}
+                    checked={selectedGender === "Other"}
                   />{" "}
                   Other
                 </label>
               </div>
+              {errors.e_gender && <span className={styles["error-message"]}>{errors.e_gender.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Designation</label>
               <select
-                name="e_designation"
                 id="designationDropdown"
-                value={employee.e_designation}
-                onChange={handleInput}
-                required
+                className={errors.e_designation ? styles["input-error"] : ""}
+                {...register("e_designation", { required: "Please select a designation" })}
               >
                 <option value="">Select Designation</option>
                 {designations.map((designation) => (
@@ -207,34 +230,41 @@ function Employee() {
                   </option>
                 ))}
               </select>
+              {errors.e_designation && <span className={styles["error-message"]}>{errors.e_designation.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Date of Joining</label>
               <input
                 type="date"
-                name="e_dateOfJoining"
-                value={employee.e_dateOfJoining}
-                onChange={handleInput}
-                required
+                className={errors.e_dateOfJoining ? styles["input-error"] : ""}
+                {...register("e_dateOfJoining", {
+                  required: "Date of joining is required",
+                })}
               />
+              {errors.e_dateOfJoining && <span className={styles["error-message"]}>{errors.e_dateOfJoining.message}</span>}
             </div>
 
             <div className={styles["form-group"]}>
               <label>Initial Salary</label>
               <input
                 type="number"
-                name="e_initialSalary"
-                value={employee.e_initialSalary}
                 placeholder="0.00"
-                onChange={handleInput}
                 min="0"
-                required
+                className={errors.e_initialSalary ? styles["input-error"] : ""}
+                {...register("e_initialSalary", {
+                  required: "Initial salary is required",
+                  min: {
+                    value: 0,
+                    message: "Salary cannot be negative",
+                  },
+                })}
               />
+              {errors.e_initialSalary && <span className={styles["error-message"]}>{errors.e_initialSalary.message}</span>}
             </div>
 
             <div className={styles["action-buttons"]}>
-              <Button text="Save Employee" type="submit" variant="primary" />
+              <Button text={isSubmitting ? "Saving..." : "Save Employee"} type="submit" variant="primary" disabled={isSubmitting} />
             </div>
           </form>
         </section>
