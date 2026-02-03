@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { themeQuartz } from "ag-grid-community";
@@ -9,6 +9,15 @@ import styles from "./Table.module.css";
 const DesignationTable = ({ title = "Table" }) => {
   const navigate = useNavigate();
   const [rowData, setRowData] = useState([]);
+  const gridRef = useRef(null);
+
+  // Default column properties for responsive behavior
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+    sortable: true,
+    filter: true,
+    suppressSizeToFit: false,
+  }), []);
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -17,14 +26,14 @@ const DesignationTable = ({ title = "Table" }) => {
       sortable: true,
       filter: true,
       flex: 1,
-      // minWidth: 250,
-      // maxWidth: 350,
-      resizable: false,
+      minWidth: 150,
     },
     {
       headerName: "Actions",
-      minWidth: 300,
+      minWidth: 140,
+      maxWidth: 180,
       resizable: false,
+      suppressSizeToFit: true,
       cellClass: styles["centered-cell"],
       cellRenderer: (params) => {
         return (
@@ -46,6 +55,16 @@ const DesignationTable = ({ title = "Table" }) => {
       },
     },
   ]);
+
+  // Auto-size columns on grid ready
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
+
+  // Handle window resize
+  const onGridSizeChanged = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
 
   const pagination = true;
   const paginationPageSize = 10;
@@ -87,15 +106,19 @@ const DesignationTable = ({ title = "Table" }) => {
   return (
     <>
       <h3 className={styles["section-header"]}>{title}</h3>
-      <div className="table-responsive">
-        <div style={{ height: 530, width: "100%" }}>
+      <div className={styles["table-responsive"]}>
+        <div className={styles.gridContainer}>
           <AgGridReact
+            ref={gridRef}
             rowData={rowData}
             columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
             theme={myTheme}
             pagination={pagination}
             paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
+            onGridReady={onGridReady}
+            onGridSizeChanged={onGridSizeChanged}
           />
         </div>
       </div>

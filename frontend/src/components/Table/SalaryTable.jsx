@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useState as useFilterState } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { themeQuartz } from "ag-grid-community";
@@ -147,6 +147,15 @@ const MonthFilter = forwardRef((props, ref) => {
 const SalaryTable = ({ title = "Table" }) => {
   const navigate = useNavigate();
   const [rowData, setRowData] = useState([]);
+  const gridRef = useRef(null);
+
+  // Default column properties for responsive behavior
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+    sortable: true,
+    filter: true,
+    suppressSizeToFit: false,
+  }), []);
 
   const [columnDefs, setColumnDefs] = useState([
     {
@@ -155,8 +164,7 @@ const SalaryTable = ({ title = "Table" }) => {
       sortable: true,
       filter: true,
       flex: 1,
-      // minWidth: 250,
-      maxWidth: 350,
+      minWidth: 120,
       valueGetter: (params) => params.data.e_id?.e_name || "No Name",
     },
     {
@@ -165,9 +173,7 @@ const SalaryTable = ({ title = "Table" }) => {
       sortable: true,
       filter: MonthFilter,
       flex: 1,
-      // minWidth: 250,
-      maxWidth: 300,
-      resizable: false,
+      minWidth: 100,
       // Sort by month order (Jan=1, Dec=12)
       comparator: (a, b) => {
         const aIndex = MONTHS.indexOf(a);
@@ -181,9 +187,7 @@ const SalaryTable = ({ title = "Table" }) => {
       sortable: true,
       filter: true,
       flex: 1,
-      // minWidth: 250,
-      maxWidth: 300,
-      resizable: false,
+      minWidth: 80,
     },
     {
       field: "salary",
@@ -192,15 +196,14 @@ const SalaryTable = ({ title = "Table" }) => {
       sortable: true,
       filter: true,
       flex: 1,
-      // minWidth: 250,
-      maxWidth: 300,
-      resizable: false,
+      minWidth: 100,
     },
     {
       headerName: "Actions",
-      // minWidth: 250,
-      maxWidth: 250,
+      minWidth: 140,
+      maxWidth: 180,
       resizable: false,
+      suppressSizeToFit: true,
       cellClass: styles["centered-cell"],
       cellRenderer: (params) => {
         return (
@@ -222,6 +225,16 @@ const SalaryTable = ({ title = "Table" }) => {
       },
     },
   ]);
+
+  // Auto-size columns on grid ready
+  const onGridReady = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
+
+  // Handle window resize
+  const onGridSizeChanged = useCallback((params) => {
+    params.api.sizeColumnsToFit();
+  }, []);
 
   const pagination = true;
   const paginationPageSize = 10;
@@ -263,15 +276,19 @@ const SalaryTable = ({ title = "Table" }) => {
   return (
     <>
       <h3 className={styles["section-header"]}>{title}</h3>
-      <div className="table-responsive">
-        <div style={{ height: 530, width: "100%" }}>
+      <div className={styles["table-responsive"]}>
+        <div className={styles.gridContainer}>
           <AgGridReact
+            ref={gridRef}
             rowData={rowData}
             columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
             theme={myTheme}
             pagination={pagination}
             paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
+            onGridReady={onGridReady}
+            onGridSizeChanged={onGridSizeChanged}
           />
         </div>
       </div>
