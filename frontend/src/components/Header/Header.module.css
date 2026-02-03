@@ -7,12 +7,15 @@
   padding: 15px 20px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .topbar h2 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 ul {
@@ -21,6 +24,8 @@ ul {
   padding: 0;
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 a {
@@ -28,13 +33,33 @@ a {
   padding: 0;
 }
 
+/* Tablet responsive */
+@media screen and (max-width: 1024px) {
+  .topbar {
+    padding: 12px 15px;
+  }
 
+  .topbar h2 {
+    font-size: 1.3rem;
+  }
+
+  ul {
+    gap: 6px;
+  }
+}
+
+/* Mobile responsive */
 @media screen and (max-width: 768px) {
   .topbar {
     flex-direction: column;
     align-items: stretch;
     gap: 15px;
     text-align: center;
+    padding: 15px;
+  }
+
+  .topbar h2 {
+    font-size: 1.25rem;
   }
 
   .topbar nav {
@@ -43,8 +68,32 @@ a {
     gap: 10px;
   }
 
+  ul {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  ul li {
+    width: 100%;
+  }
+
+  ul li a,
+  ul li button {
+    width: 100%;
+  }
+
   .topbar .action-buttons {
     flex-direction: column;
     width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .topbar {
+    padding: 12px;
+  }
+
+  .topbar h2 {
+    font-size: 1.1rem;
   }
 }
