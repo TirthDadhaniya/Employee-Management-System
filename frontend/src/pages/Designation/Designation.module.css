@@ -42,6 +42,8 @@
   padding: var(--spacing-lg);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .table-responsive {
@@ -64,6 +66,17 @@
 
 .w-100 {
   width: 100% !important;
+}
+
+/* Tablet responsive */
+@media screen and (max-width: 1024px) {
+  .split-container {
+    gap: 16px;
+  }
+
+  .form-section {
+    position: static;
+  }
 }
 
 @media screen and (max-width: 768px) {
