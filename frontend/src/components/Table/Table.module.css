@@ -8,11 +8,10 @@
 
 .table-responsive {
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   margin-bottom: 20px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
+  overflow: visible;
 }
 
 .table-responsive table {
@@ -31,4 +30,50 @@
   align-items: center;
   gap: 10px;
   /* Adds space between Edit and Delete buttons */
+}
+
+/* AG Grid Container */
+.gridContainer {
+  height: 530px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Responsive adjustments for AG Grid */
+@media screen and (max-width: 1024px) {
+  .gridContainer {
+    height: 500px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .section-header {
+    font-size: 1.1rem;
+  }
+
+  .gridContainer {
+    height: 450px;
+  }
+
+  .centered-cell {
+    gap: 6px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .section-header {
+    font-size: 1rem;
+  }
+
+  .gridContainer {
+    height: 480px;
+  }
+
+  .centered-cell {
+    gap: 4px;
+  }
+
+  .table-responsive {
+    overflow: visible !important;
+  }
 }
