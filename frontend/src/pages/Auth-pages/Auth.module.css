@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 80vh;
+  padding: 20px;
 }
 
 .auth-card {
@@ -68,4 +69,32 @@
   color: #dc3545;
   font-size: 0.8rem;
   margin-top: 0.3rem;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 480px) {
+  .auth-wrapper {
+    padding: 15px;
+    min-height: 70vh;
+  }
+
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  .auth-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .auth-header p {
+    font-size: 0.9rem;
+  }
+
+  .auth-footer {
+    font-size: 0.85rem;
+  }
 }
