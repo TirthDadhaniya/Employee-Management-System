@@ -77,3 +77,138 @@ option[value=""][disabled] {
 option {
   color: var(--text-color);
 }
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* Global responsive adjustments */
+@media screen and (max-width: 1024px) {
+  body {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  input[type="password"],
+  select {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  input[type="password"],
+  select {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+}
+
+/* AG Grid responsive overrides */
+.ag-root-wrapper {
+  border-radius: var(--radius) !important;
+}
+
+.ag-header-cell-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Ensure pagination is always fully visible */
+.ag-paging-panel {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  min-height: 48px !important;
+  overflow: visible !important;
+}
+
+.ag-paging-button {
+  cursor: pointer !important;
+}
+
+@media screen and (max-width: 768px) {
+  .ag-header-cell {
+    padding: 0 8px !important;
+  }
+
+  .ag-cell {
+    padding: 0 8px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .ag-paging-panel {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 8px !important;
+    min-height: auto !important;
+  }
+
+  .ag-paging-row-summary-panel {
+    margin: 0 !important;
+  }
+
+  .ag-paging-page-summary-panel {
+    margin: 0 4px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ag-header-cell {
+    padding: 0 6px !important;
+  }
+
+  .ag-cell {
+    padding: 0 6px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .ag-paging-panel {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    font-size: 0.75rem !important;
+    padding: 6px !important;
+    min-height: 40px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .ag-paging-page-size {
+    gap: 4px !important;
+  }
+
+  /* Stack pagination elements on very small screens */
+  .ag-paging-row-summary-panel,
+  .ag-paging-page-summary-panel {
+    flex-basis: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  .ag-paging-button {
+    display: inline-flex !important;
+    visibility: visible !important;
+  }
+}
