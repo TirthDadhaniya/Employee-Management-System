@@ -13,6 +13,7 @@
   transition: all 0.2s ease;
   gap: 8px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .btn:active {
@@ -70,4 +71,34 @@
 .btn-sm {
   padding: 6px 10px;
   font-size: 0.85rem;
+}
+
+/* Responsive button styles */
+@media screen and (max-width: 768px) {
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .btn-sm {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+
+  .btn-block {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .btn {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .btn-sm {
+    padding: 4px 6px;
+    font-size: 0.75rem;
+  }
 }
